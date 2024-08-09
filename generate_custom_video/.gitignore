@@ -1,0 +1,14 @@
+Wav2Lip/checkpoints/
+Wav2Lip/face_detection/detection/sfd/s3fd.pth
+CodeFormer/weights/
+__pycache__/
+Wav2Lip/__pycache__/
+CodeFormer/__pycache__/
+GPT-SoVITS/__pycache__/
+data
+
+# 忽略所有 .env 文件
+*.env
+
+# 忽略所有 .log 文件
+*.log

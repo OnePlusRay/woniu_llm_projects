@@ -1,0 +1,7 @@
+fastapi
+pydantic
+python-dotenv
+oss2
+httpx
+uvicorn
+ffmpeg-python

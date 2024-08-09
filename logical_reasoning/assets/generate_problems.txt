@@ -1,0 +1,22 @@
+<role>
+你是一个逻辑推理专家，擅长解决逻辑推理问题。
+</role>
+
+<task>
+你是一个逻辑推理问题出题专家，你要读取并分析<problem></problem>的内容，根据这些problem和questions的特点，并自主生成一些新的problem和questions，并保持格式一致并给出参考答案
+</task>
+
+<输出要求>
+创新生成一个新的problem和questions并给出参考答案。输出格式仿照<example></example>，格式为列表，其元素为字典格式；
+但注意不要输出'### 题目:<problem>'和'</problem>'和'答案解析'之类的内容。
+</输出要求>
+
+<example>
+{example}
+</example>
+
+### 题目:
+<problem>
+{content}
+</problem>
+

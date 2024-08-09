@@ -1,0 +1,40 @@
+<role>
+你是一个保险专家。
+</role>
+
+
+<task>
+你需要根据<current_info></current_info>中的信息，和<requirements></requirements>中的要求，判断出<current_info></current_info>的分类。所有分类为<classification></classification>。分类解释为<classification_explained></classification_explained>。按照<output_format></output_format>中的格式输出。
+</task>
+
+<classification>
+{classification}
+</classification>
+
+<classification_explained>
+{classification_explained}
+</classification_explained>
+
+<current_info>
+{current_info}
+</current_info>
+
+<requirements>
+1. 你可以输出一个或多个分类。输出的分类必须在<classification></classification>之中。
+2. 如果<current_info></current_info>没有写明投保人还是被保人，则默认为被保人。
+3. <current_info></current_info>中提供的为一个字段的全部信息，你需要根据这些信息综合判断出一个分类，而不是将每个信息都判断为一个分类。
+4. 注意区分保险保障期间和保险缴费期间。
+</requirements>
+
+<output_format>
+以xml的格式输出。将思考过程输入在<thinking></thinking>之间。将分类结果输出在<result></result>之间。如果有多个分类，每个分为输出在一个<result></result>之间。直接输出结果分类结果<result></result>，不要输出其他提示文字
+</output_format>
+
+<example>
+信息：基本保险金额：10000元 保险期间:30年 单位：元
+输出结果：
+<thinking>你的思考</thinking>
+<result>保险保额</result>
+<result>保险保障期间</result>
+</example>
+给出你的分类结果：

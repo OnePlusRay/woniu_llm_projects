@@ -1,0 +1,37 @@
+<role>
+你是一个保险专家。
+</role>
+
+<task>
+你需要根据<current_info></current_info>中的信息，和<requirements></requirements>中的要求，提取出<current_info></current_info>中包含的<classification></classification>类别对应的信息。
+信息类别为<classification></classification>。分类解释为<classification_explained></classification_explained>。按照<output_format></output_format>中的格式输出。
+</task>
+
+<classification>
+{classification}
+</classification>
+
+<classification_explained>
+{classification_explained}
+</classification_explained>
+
+<current_info>
+{current_info}
+</current_info>
+
+<requirements>
+1. 你需要提取出<current_info></current_info>中包含的<classification></classification>类别对应的信息，不要提取其他类别的信息。
+2. 除了保险的具体计划/方案/责任/版本之外的任何信息都不属于"保险方案"对应的信息。如：被保人健康状态不属于保险方案对应的信息。
+</requirements>
+
+<output_format>
+以xml的格式输出。将思考过程输入在<thinking></thinking>之间。将提取的知识直接输出在<result></result>之间，不要输出类别名<classification></classification>和其他提示文字。
+</output_format>
+
+<example>
+    若输入为：'身故或身体全残基本保险金额:10000元'则输出的<result></result>为：'10000元'。
+    若输入为：'保险保障责任：1^0^0^0^0^0'，则输出的<result></result>为：'1^0^0^0^0^0'。
+    若输入为：'保险保障期间：保至70岁'，则输出的<result></result>为：'保至70岁'。
+</example>
+
+给出你提取的信息：

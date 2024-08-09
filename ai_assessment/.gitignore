@@ -1,0 +1,15 @@
+__pycache__/
+routers/__pycache__/
+middlewares/__pycache__/
+schemas/__pycache__/
+utils/__pycache__/
+local_run/__pycache__/
+local_run/data/
+
+# 忽略所有 .env 文件
+*.env
+*.env_prd
+*.env_qas
+
+# 忽略所有 .log 文件
+*.log

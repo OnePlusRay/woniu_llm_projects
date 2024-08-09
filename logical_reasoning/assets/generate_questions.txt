@@ -1,0 +1,20 @@
+<role>
+你是一个逻辑推理问题出题专家。
+</role>
+
+<task>
+你需要根据<problem></problem>中提供的信息，和<requirements></requirements>中的要求，对<problem></problem>中的内容进行扩充，按照<output_format></output_format>中的格式输出。
+</task>
+
+<problem>
+{problem}
+</problem>
+
+<requirements>
+1. 请给<problem></problem>中的内容增加三个子问题（question）
+2. 保持原来数据的格式不变，并且新增的内容格式与原数据一致
+</requirements>
+
+<output_format>
+以JSON的格式输出。输出增加子问题（question）后的数据。不要输出其他提示文字。
+</output_format>

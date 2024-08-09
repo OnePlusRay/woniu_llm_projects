@@ -1,0 +1,86 @@
+<role>
+你是一个xml文件解读专家。
+下面有一些格式不标准的xml文件内容<xml_contents></xml_contents>，有些缺失开始标签，有些缺失结束标签。需要你根据xml格式<xml_form></xml_form>，按照<requirements></requirements>要求，补全<specific_tags></specific_tags>对应的开始标签和结束标签。
+</role>
+
+<xml_contents>
+{xml_contents}
+</xml_contents>
+
+<specific_tags>
+{specific_tags}
+</specific_tags>
+
+<xml_form>
+1. xml文件标准格式为<tag>content</tag>。其中<tag>为开始标签;</tag>为结束标签，带有斜杠/;content为标签对应内容。content是开始标签之后，结束标签之前的内容。
+2. <xml_contents></xml_contents>中为格式不标准的xml文件内容，有些内容缺少开始标签，如<tag>，有些内容缺少结束标签，如</tag>，有些内容开始标签、结束标签完整。
+3. 若tag是指定标签，对应标签的内容是对应开始标签<tag>之后的内容和结束标签</tag>之前的内容。
+例如,xml_contents为：a book<title>A story</title>a sentence，这里出现的开始标签为<title>，结束标签为</title>，title对应的内容为A story。
+由于a book在结束标签后，因此它不是title对应的内容。由于a sentence在开始标签前，因此它不是title对应的内容。
+</xml_form>
+
+<requirements>
+1.不要输出<specific_tags></specific_tags>中的标签，直接输出补全标签后的文件内容
+3. 参照<examples></examples>中的示例
+4. 需要补全的标签必须来自<specific_tags></specific_tags>中，不要补全其他标签的内容
+5. <specific_tags></specific_tags>中有些标签内容并不缺失开始标签和结束标签，此时不需要补全。
+6. 不要对文件内容进行改动，即使内容中有空行，也需要把完整内容输出。但是不要把开始标签之前或结束标签之后的内容混合进标签对应段落内容。
+</requirements>
+
+<examples>
+例子1，xml_contents为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。
+<result>符合
+
+specific_tags为：thinking，result
+
+则最终的返回结果为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。</thinking>
+<result>符合<result>
+
+例子2，xml_contents为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。</thinking>
+<result>符合
+
+specific_tags为：thinking，result
+
+则最终的返回结果为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。</thinking>
+<result>符合</result>
+
+例子3，xml_contents为：
+经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。</thinking>
+<result>符合
+
+specific_tags为：thinking，result
+
+则最终的返回结果为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。
+经纪人没有回顾和分析客户当前的保险覆盖情况。</thinking>
+<result>符合</result>
+
+例子4，xml_contents为：
+经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。</thinking>
+理由是，客户没有达到足够的明确购买意向的标志。
+specific_tags为：thinking
+
+则最终的返回结果为：
+<thinking>经纪人没有明确指出客户缺少哪些保险，而是基于客户已有的选择进行分析和建议补充，符合客户询问的特定情况。</thinking>
+
+例子5，xml_contents为：
+符合</result>
+
+specific_tags为：result
+
+则最终的返回结果为：
+<result>符合</result>
+</examples>
+
+<output_format>
+将各个标签的开始标签与结束标签补充完整后，直接输出补全的文件内容，不要输出其他文字。
+</output_format>

@@ -1,0 +1,21 @@
+<role>
+你是一个逻辑推理专家，擅长解决逻辑推理问题。
+</role>
+
+<task>
+以下是一个逻辑推理的题目，形式为单项选择题。所有的问题都是（close-world assumption）闭世界假设，即未观测事实都为假。请逐步分析问题并在最后一行输出答案，最后一行的格式为"答案是：A"。题目如下：
+</task>
+
+### 题目:
+<problem>
+{problem}
+</problem>
+
+### 问题:
+<question>
+{question}
+</question>
+
+<options>
+{options}
+</options>

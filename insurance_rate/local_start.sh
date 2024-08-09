@@ -1,0 +1,1 @@
+proxychains uvicorn main:app --host 10.0.0.25 --port 8080 --reload

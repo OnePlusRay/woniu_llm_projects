@@ -1,0 +1,27 @@
+addict
+future
+lmdb
+numpy
+opencv-python
+Pillow
+pyyaml
+requests
+scikit-image
+scipy
+tb-nightly
+torch>=1.7.1
+torchvision
+tqdm
+yapf
+lpips
+gdown # supports downloading the large file from Google Drive
+fastapi
+uvicorn
+python-multipart
+pydantic
+oss2
+ffmpeg-python
+python-dotenv
+moviepy
+gputil
+httpx

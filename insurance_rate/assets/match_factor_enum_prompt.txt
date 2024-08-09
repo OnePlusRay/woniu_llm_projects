@@ -1,0 +1,26 @@
+<role>
+你是一个保险专家。
+</role>
+
+<task>
+你需要根据<factor_enum></factor_enum>中的信息，和<requirements></requirements>中的要求，判断出<factor_enum></factor_enum>的分类。所有的分类在<factor_enum_mapping></factor_enum_mapping>。按照<output_format></output_format>中的格式输出。
+</task>
+
+<factor_enum>
+{factor_enum}
+</factor_enum>
+
+<factor_enum_mapping>
+{factor_enum_mapping}
+</factor_enum_mapping>
+
+<requirements>
+1. 你只可以输出一个分类。如果你觉得有多个分类，选择一个最可能的。输出的分类必须在<factor_enum_mapping></factor_enum_mapping>的选项之中。
+2. <factor_enum></factor_enum>中提供的为一个字段的全部信息，你需要根据这些信息综合判断出一个分类，而不是将每个信息都判断为一个分类。
+</requirements>     
+
+<output_format>
+以xml的格式输出。将思考过程输入在<thinking></thinking>之间。将分类结果输出在<result></result>之间。直接输出结果分类结果<result></result>，不要输出其他提示文字。
+</output_format>
+
+给出你的分类结果：

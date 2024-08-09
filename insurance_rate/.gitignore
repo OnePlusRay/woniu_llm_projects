@@ -1,0 +1,13 @@
+__pycache__/
+data/
+src/__pycache__/
+utils/__pycache__/
+schemas/__pycache__/
+
+# 忽略所有 .env 文件
+*.env
+*.env_prd
+*.env_qas
+
+# 忽略所有 .log 文件
+*.log
