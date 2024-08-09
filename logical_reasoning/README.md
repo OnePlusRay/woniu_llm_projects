@@ -266,7 +266,7 @@ python validation.py
 ```
 输入：原模型、训练得到的 lora 权重、数据集
 输出：验证的正确率
-  
+
 #### 方法二：webchat 网页可视化推理验证
 在终端中输入下面的命令（其中 GPU 设备可以根据需要设置）
 ```bash
@@ -296,8 +296,8 @@ lora_path = '/data/disk4/home/chenrui/LLaMA-Factory-main/saves/qwen1.5-32b-large
 
 ## 实验结果
 | 模型 | 提示词 | 1000验证 | 5000验证 | submit相似度 | 提交得分 | 显存 |
-| -------------- | ---- | ----- | ----- | ----- | ------ | ------ | 
-| Qwen2-72B-Instruct-bnb-int4（qlora微调） | raw | - | - | 0.8682 | 0.8358* | 45G | 
+| -------------- | ---- | ----- | ----- | ----- | ------ | ------ |
+| Qwen2-72B-Instruct-bnb-int4（qlora微调） | raw | 0.8860 | - | 0.8682 | 0.8358* | 45G |
 | Qwen1.5-32B-Chat-bnb-int4（qlora微调） | raw  | 0.8610 | - | 0.8057 | 0.7899 | 25G |
 | Qwen2-7B-Instruct（lora微调） | raw | 0.8590 | 0.8412 | 0.7959 |  0.7854 | 20G |
 | Qwen2-Math-7B-Instruct（lora微调） | raw | 0.8000 | 0.7850 | 0.7387 | - | 20G |
