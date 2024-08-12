@@ -1,12 +1,6 @@
 {
   "logical_problems":{
-    "file_name": "logical_problems.json"
-  },
-  "logical_problems_large":{
     "file_name": "logical_problems_10000.json"
-  },
-  "logical_problems_large_3_shot":{
-    "file_name": "logical_problems_large_3_shot.json"
   },
   "identity": {
     "file_name": "identity.json"
