@@ -1,11 +1,1 @@
 __pycache__/
-checkpoints/
-logs/
-output/
-train/
-
-# 忽略所有 .env 文件
-*.env
-
-# 忽略所有 .log 文件
-*.log
