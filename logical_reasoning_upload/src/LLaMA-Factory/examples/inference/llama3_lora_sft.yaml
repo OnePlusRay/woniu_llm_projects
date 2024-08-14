@@ -1,0 +1,4 @@
+model_name_or_path: /data/disk4/home/chenrui/Qwen1.5-32B-Chat-bnb-4bit
+adapter_name_or_path: saves/qwen1.5-32b-large-1/lora/sft
+template: qwen
+finetuning_type: lora 

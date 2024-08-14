@@ -1,6 +1,6 @@
 # 大模型应用：逻辑推理
 
-用给定数据集（需要扩充）对大模型进行微调，并在推理过程中增加RAG等技术，使其在复杂逻辑推理问题中获得较好的表现。
+用扩充后的给定数据集对大模型进行微调，并在推理过程中增加RAG等技术，使其在复杂逻辑推理问题中获得较好的表现。
 
 ## 整体流程
 1. 调用 GPT4 的 API 接口扩充数据集（从 500 扩充到 10000 以上）
@@ -296,6 +296,7 @@ lora_path = '/data/disk4/home/chenrui/LLaMA-Factory-main/saves/qwen1.5-32b-large
 | InternLM2.5-20B-Chat | bnb-int8 | RAG(1-shot) | 0.8680 | 0.8193 | - | 25G |
 | InternLM2.5-20B-Chat | bnb-int8 | RAG(3-shot) | 0.8890 | 0.8298 | 0.8042 | 25G |
 | InternLM2.5-20B-Chat | bnb-int8 | **RAG(5-shot)** | 0.8710 | 0.8306 | **0.8117** | 25G |
+| InternLM2.5-20B-Chat | bnb-int8 | RAG(7-shot) | - | 0.8215 | - | 25G |
 
 注1：上述结果（除API外）都是基于 LoRA 微调后的模型
 注2：* 表示不满足竞赛要求（32G 显存限制）
