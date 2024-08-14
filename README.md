@@ -6,6 +6,7 @@
 - bge_emb_finetune：Embedding 微调
 - generate_custom_video：自定义视频生成
 - logical_reasoning：大模型的复杂逻辑推理能力评估（天池竞赛项目）
+- logical_reasoning_upload：用于竞赛初赛提交的代码包
 - LLaMA-Factory：大模型微调框架
 - AICamp_yuan_baseline：基于源大模型的简单应用开发（datawhale夏令营项目）
 
