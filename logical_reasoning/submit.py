@@ -9,27 +9,30 @@ from data_processing.compare_answer import load_jsonl, compare_results
 from collections import Counter
 import time
 from tqdm import tqdm
+import gc
+from src.rag import EmbeddingModel, VectorStoreIndex, VectorStoreIndexBatch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 指定使用的设备
 
 # 加载基准答案JSONL文件
-baseline_file_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/data/output/test/Qwen2-72B-test.jsonl'
+baseline_file_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/data/output/test/Qwen2_72B_test_score_8449.jsonl'
 
-# 版本一：加载模型和LoRA权重（qwen2-7b）
-# model_path = '/data/disk4/home/chenrui/ai-project/Qwen2-7B-Instruct'
-# lora_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/LLaMA-Factory/saves/qwen2-7b-20000/lora/sft/checkpoint-2000-best'  # 这里改称你的 lora 输出对应 checkpoint 地址
+# 加载 embedding 模型
+embed_model_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/bge-small-zh-v1___5'  # 还有 large 版本，可以考虑尝试   
+embed_model = EmbeddingModel(embed_model_path)  # 加载 embedding 模型
 
-# 版本二：加载模型和LoRA权重（qwen1.5-32b）
-model_path = '/data/disk4/home/chenrui/Qwen1.5-32B-Chat-bnb-4bit'
-lora_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/LLaMA-Factory/saves/qwen1.5-32b-4-epoch/lora/sft/qwen1_5-32b-bnb-int4-checkpoint-4000-best'  # 这里改称你的 lora 输出对应 checkpoint 地址
+# 加载向量知识库
+doecment_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/data/output/knowledge_20000.txt'
+index = VectorStoreIndexBatch(doecment_path, embed_model)
+k = 5
 
-# 版本三：加载模型和LoRA权重（yi-1.5-34b）
-# model_path = '/data/disk4/home/chenrui/Yi-1.5-34B-Chat-bnb-4bit'
-# lora_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/LLaMA-Factory/saves/yi-1.5-34b/lora/sft/checkpoint-300'  # 这里改称你的 lora 输出对应 checkpoint 地址
+# 释放多余的预留内存
+gc.collect()
+torch.cuda.empty_cache()
 
-# 版本四：加载模型和LoRA权重（qwen2-72b）
-# model_path = '/data/disk4/home/chenrui/Qwen1.5-32B-Chat-bnb-4bit'
-# lora_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/LLaMA-Factory/saves/qwen1.5-32b-large-1/lora/sft/checkpoint-4000'  # 这里改称你的 lora 输出对应 checkpoint 地址
+# 载模型和LoRA权重
+model_path = '/data/disk4/home/chenrui/InternLM2_5-20B-Chat'
+lora_path = '/data/disk4/home/chenrui/ai-project/logical_reasoning/LLaMA-Factory/saves/internlm2.5-chat-20000-mini/lora/sft/checkpoint-500-best'  # 这里改称你的 lora 输出对应 checkpoint 地址
 
 # 加载tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
@@ -58,7 +61,7 @@ def extract_and_replace_subpath(path):
     else:
         return None
     
-output_file = f'/data/disk4/home/chenrui/ai-project/logical_reasoning/data/output/submit/submit_{os.path.basename(model_path)}_{extract_and_replace_subpath(lora_path)}.jsonl'
+output_file = f'/data/disk4/home/chenrui/ai-project/logical_reasoning/data/output/submit/submit_{os.path.basename(model_path)}_{extract_and_replace_subpath(lora_path)}_{k}_shot_rag.jsonl'
 
 # 如果输出文件已经存在，则创建一个新的文件名
 if os.path.exists(output_file):
@@ -97,8 +100,14 @@ for idx, item in enumerate(tqdm1(data)):
     for question in questions:
         question_text = question['question']
         options = question["options"]
+        
+        prompt = get_prompt(problem, question_text, options)
 
-        prompt = get_prompt_complex(problem, question_text, options)
+        context = index.query(prompt, k)
+
+        if context:
+            prompt = f'背景：{context}\n\n问题：{prompt}\n请基于背景，给出答案。'
+        # print(prompt)
         messages = [
             {"role": "user", "content": prompt}
         ]
@@ -159,12 +168,11 @@ for idx, item in enumerate(tqdm1(data)):
         # 计算相似度比例
         similarity_ratio = same_questions_count / total_questions if total_questions > 0 else 0
 
-        print(f"Processed {idx + 1} problems, results written to {output_file}")
+        print('\n' + f"Processed {idx + 1} problems, results written to {output_file}")
         print(f"Processed {total_questions} questions, different questions: {different_questions_count}")
         # print(f"Different Questions: {different_questions_count}")
         print(f"Similarity Ratio: {similarity_ratio:.2%}")
 
-        results = []  # 清空结果列表以便存储下一批结果
         results = []  # 清空结果列表以便存储下一批结果
 
 # 写入剩余的结果

@@ -6,14 +6,10 @@ def get_prompt(problem, question, options):
     '''构建一个逻辑推理问题的提示文本'''
     # 将选项列表转换为带有字母标签的字符串，每个选项一行，字母标签从 'A' 到 'G'，取决于有多少个选项。
     # 使用列表推导式和str.join()将转换后的选项合并成一个字符串。
-    # pdb.set_trace()
-    try:
-        options = '\n'.join(f"{'ABCDEFG'[i]}. {o}" for i, o in enumerate(options))
-    except:
-        pdb.set_trace()
+    options = '\n'.join(f"{'ABCDEFG'[i]}. {o}" for i, o in enumerate(options))
 
     prompt = f"""
-你是一个逻辑推理专家，擅长解决逻辑推理问题。以下是一个逻辑推理的题目，形式为单项选择题。所有的问题都是（close-world assumption）闭世界假设，即未观测事实都为假。请逐步分析问题，最终只输出答案对应的选项字母，如"A"。题目如下：
+你是一个逻辑推理专家，擅长解决逻辑推理问题。以下是一个逻辑推理的题目，形式为单项选择题。所有的问题都是（close-world assumption）闭世界假设，即未观测事实都为假。请逐步分析问题，最终只输出答案对应的选项字母，如\"A\"。题目如下：
 
 ### 题目:
 {problem}
@@ -226,7 +222,7 @@ def split_dataset(input_file, output_file):
                         'question': question['question'],
                         'options': question['options'],
                         'answer': question.get('answer', None),  # 如果有答案则保留
-                        'gpt4':question.get('gpt4', None),
+                        # 'gpt4':question.get('gpt4', None),
                         'id': f'round1_train_data_{new_id}'
                     }
                     outfile.write(json.dumps(new_item, ensure_ascii=False) + '\n')
