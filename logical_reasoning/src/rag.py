@@ -10,7 +10,7 @@ import random
 import time
 from tqdm import tqdm
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # 定义向量模型类
 class EmbeddingModel:
@@ -128,7 +128,7 @@ class VectorStoreIndexBatch:
         """
         vectors = []
         for i in range(0, len(documents), self.batch_size):
-            batch_documents = documents[i:i + self.batch_size]
+            batch_documents = documents[i: i + self.batch_size]
             batch_vectors = self.embed_model.get_embeddings(batch_documents)
             vectors.extend(batch_vectors)
         return vectors

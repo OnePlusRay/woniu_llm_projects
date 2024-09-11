@@ -1,21 +1,41 @@
 import os
 import re
+import gc
 import json
 import torch
+import datetime
+import torch.distributed as dist
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
+from collections import Counter
+from tqdm import tqdm
+
+from src.rag import EmbeddingModel, VectorStoreIndexBatch
 from data_processing.utils import get_prompt, get_prompt_complex
 from data_processing.compare_answer import load_jsonl, compare_results
-from collections import Counter
-import datetime
-from tqdm import tqdm
-import gc
-from src.rag import EmbeddingModel, VectorStoreIndexBatch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 指定使用的设备
 
+def print_gpu_info():
+    '''打印GPU信息'''
+    if torch.cuda.is_available():
+        print("CUDA is available on this system.")
+        print(f"Number of GPUs available: {torch.cuda.device_count()}")
+        print("-" * 50)
+        
+        for i in range(torch.cuda.device_count()):
+            print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+            print(f"  Total Memory: {torch.cuda.get_device_properties(i).total_memory / (1024**2):.2f} MB")
+            print(f"  Current device: {torch.cuda.current_device() == i}")
+            print("-" * 50)
+
+    else:
+        print("CUDA is not available.")
+
+print_gpu_info()
+
 # 加载 embedding 模型
-embed_model_path = 'models/bge-small-zh-v1.5'  # 还有 large 版本，可以考虑尝试   
+embed_model_path = '/home/user/data2/chenrui/models/AI-ModelScope/bge-small-zh-v1___5'  # 还有 large 版本，可以考虑尝试   
 embed_model = EmbeddingModel(embed_model_path)  # 加载 embedding 模型
 
 # 加载向量知识库
@@ -28,8 +48,8 @@ gc.collect()
 torch.cuda.empty_cache()
 
 # 载模型和LoRA权重
-model_path = 'models/internlm2_5-20b-chat'
-lora_path = 'LLaMA-Factory/saves/internlm2.5-chat/lora/sft/checkpoint-500'  # 这里改称你的 lora 输出对应 checkpoint 地址
+model_path = '/home/user/data2/chenrui/models/chenr1209/InternLM2___5-20B-Chat-bnb-int8'
+lora_path = '/home/user/data2/chenrui/models/chenr1209/Intern2___5-20B-Chat-bnb-int8-lora_adapter'  # 这里改称你的 lora 输出对应 checkpoint 地址
 
 # 加载tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
@@ -40,13 +60,17 @@ model = AutoModelForCausalLM.from_pretrained(model_path, device_map='auto', torc
 # 加载lora权重
 model = PeftModel.from_pretrained(model, model_id=lora_path)
 
+# 使用 DataParallel
+if torch.cuda.device_count() > 1:
+    model = torch.nn.DataParallel(model, device_ids=range(torch.cuda.device_count()))
+
 # 读取JSONL文件
 data = []
 input_file = 'data/input/raw/round1_test_data.jsonl'
 with open(input_file, 'r', encoding='utf-8') as f:
     data = [json.loads(line.strip()) for line in f if line.strip()]
 
-output_file = f'submit/submit_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl'
+output_file = 'data/output/submit/submit_' + datetime.datetime.now().strftime('%Y%m%d_%H%M%S') + '.jsonl'
 
 results = []
 total_questions = 0
@@ -73,7 +97,7 @@ for idx, item in enumerate(tqdm1(data)):
         messages = [
             {"role": "user", "content": prompt}
         ]
-        inputs = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True).to('cuda')
+        inputs = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True).to(device)
 
         gen_kwargs = {"max_length": 4096, "do_sample": True, "top_k": 1}
         # 存储多次调用的输出
@@ -82,7 +106,7 @@ for idx, item in enumerate(tqdm1(data)):
         # 三次调用模型
         for i in range(3):
             with torch.no_grad():
-                outputs = model.generate(**inputs, **gen_kwargs)
+                outputs = model.module.generate(**inputs, **gen_kwargs)
                 outputs = outputs[:, inputs['input_ids'].shape[1]:]
                 output = tokenizer.decode(outputs[0], skip_special_tokens=True)
                 match_1 = re.match(r'([A-G])\.', output)
